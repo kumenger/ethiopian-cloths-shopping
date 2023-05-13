@@ -1,11 +1,11 @@
 const express = require('express')
 const bodyParser = require("body-parser");
 const db =require('./config/connection')
-require('dotenv').config()
 const path = require("path");
 const cookieParser=require('cookie-parser')
 const session=require('express-session')
 const MongoStore =require('connect-mongo')(session)
+const userRouter=require('./routes/userRoutes')
 const PORT = process.env.PORT || 3002
 //const cros = require("cors");
 
@@ -31,7 +31,7 @@ app.use(
 app.get('/',(req,res)=>{
     res.json({msg:"hello ethiopian clothing"})
 })
-
+app.use('/user',userRouter)
 db.once('open',()=>{
     console.log('connected to database')
     app.listen(PORT,()=>{

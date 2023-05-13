@@ -1,5 +1,5 @@
 const {SChema, model, Schema} = require('mongoose')
-const ClothSchema = new SChema({
+const CartSchema = new SChema({
     userID: {
         type: Schema.Types.ObjectId,
         ref: "user"
@@ -10,5 +10,5 @@ const ClothSchema = new SChema({
     },
     
 })
-const Cloth=model('cloth',ClothSchema)
-module.exports=Cloth
+const Cart=model('cart',CartSchema)
+module.exports=Cart
