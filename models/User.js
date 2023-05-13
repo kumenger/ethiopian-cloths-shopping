@@ -1,22 +1,5 @@
 const {Schema, model} = require('mongoose')
-const addresSchema=new Schema({
-    addresId:{
-        type: Schema.Types.ObjectId,
-        default: () => new Types.ObjectId(),
-    },
-    State: {
-        require:true,
-        type: String
-    },
-    adress: {
-        require:true,
-        type: String
-    },
-    zipcode: {
-        type: Number,
-        require:true
-    },
-})
+const mongoose =require('mongoose')
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -32,6 +15,10 @@ const userSchema = new mongoose.Schema({
             } is not a valid email  format!`
         }
 
+    },
+    password:{
+        type:String,
+        require:true
     },
     firstName: {
         type: String,
@@ -57,7 +44,7 @@ const userSchema = new mongoose.Schema({
     ],
     Carts: [
         {
-            ref: Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "cart"
         }
     ],
@@ -66,5 +53,5 @@ const userSchema = new mongoose.Schema({
         default:false
     }
 })
-const User = model('user', addresSchema);
+const User = model('user', userSchema);
 module.exports = User
