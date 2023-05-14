@@ -4,6 +4,7 @@ const Token = require('../models/Token')
 const bcrypt = require("bcrypt");
 const crypto = require('crypto')
 const nodemailer = require("nodemailer");
+require('dotenv').config()
 router.post('/signup', async (req, res) => {
     try {
         let {password} = req.body
@@ -20,12 +21,12 @@ router.post('/signup', async (req, res) => {
             service: "gmail",
             auth: {
         
-              user: "kumeprog@gmail.com",
-              pass:"ecchomlridjohjmd"
+              user: process.env.GMAIL_USER,
+              pass:process.env.GMAIL_APP_PASS
             },
           });
             var mailOptions = {
-              from: "kumeprog@gmail.com",
+              from: process.env.GMAIL_USER,
               to: newUser.email,
               subject: "Habesha Cloths  Account Verification ",
               html: `Hello, ${newUser.firstName} Thanks for registering in Ethiopian CLoth Store<br></br> please verify account by following this <a href='http://localhost:3002/user/confirmation/${newToken.token} 
@@ -71,7 +72,7 @@ if (user.isVerified) {
     if(!verifiedUser){
         return res.status(400).json({ type: "error", msg: err.message }); 
     }
-    res.status(200).json({msg:"The account has been verified. Please log in to continue."})
+    res.status(200).json({msg:` Thank you ${user.firstName} The account has been verified. Please log in to continue.`})
   
 })
 
