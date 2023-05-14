@@ -8,7 +8,7 @@ const MongoStore =require('connect-mongo')(session)
 const userRouter=require('./routes/userRoutes')
 const PORT = process.env.PORT || 3002
 //const cros = require("cors");
-
+require('dotenv').config()
 const app = express()
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
