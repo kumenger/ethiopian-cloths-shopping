@@ -13,6 +13,6 @@ const addresSchema = new Schema({
         type: Number,
         require: true
     }
-})
+},{ timestamps: true })
 const Adress = model('adress', addresSchema)
 module.exports = Adress

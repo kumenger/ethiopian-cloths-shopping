@@ -14,6 +14,6 @@ const ClothSchema = new SChema({
         type: Boolean
     }
 
-})
+},{ timestamps: true })
 const Cloth=model('cloth',ClothSchema)
 module.exports=Cloth
