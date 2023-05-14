@@ -1,5 +1,6 @@
 const {Schema, model} = require('mongoose')
-const mongoose =require('mongoose')
+const mongoose =require('mongoose');
+const { reset } = require('nodemon');
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -51,7 +52,13 @@ const userSchema = new mongoose.Schema({
     isVerified:{
         type:Boolean,
         default:false
+    },
+    resetPassword:{
+     expires: 600,
+      type:String,
+      
+      
     }
-})
+},{ timestamps: true })
 const User = model('user', userSchema);
 module.exports = User

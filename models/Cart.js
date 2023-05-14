@@ -9,6 +9,6 @@ const CartSchema = new SChema({
         ref: "cloth"
     },
     
-})
+},{ timestamps: true })
 const Cart=model('cart',CartSchema)
 module.exports=Cart

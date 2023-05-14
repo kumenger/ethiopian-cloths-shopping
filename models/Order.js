@@ -32,7 +32,7 @@ const orderSchema = new Schema({
         getters: true
     },
     id: false
-})
+},{ timestamps: true })
 function formatter(time) {
     let newTime = new Date(`${time}`)
     return newTime.toString()
