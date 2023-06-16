@@ -4,7 +4,6 @@ const schema = require('mongoose').Schema
 const NewTokenSchema = new schema({
     UserId: {
         type: mongoose.Schema.Types.ObjectId,
-     
         ref: "user"
     },
     token: {

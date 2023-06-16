@@ -1,10 +1,37 @@
 const router = require('express').Router();
+
+require('../google/passport')
 const User = require('../models/User')
 const Token = require('../models/Token')
 const bcrypt = require("bcrypt");
 const crypto = require('crypto')
 const nodemailer = require("nodemailer");
+const passport = require('passport');
 require('dotenv').config()
+router.get('/auth/google',(req,res)=>{
+    passport.authenticate('google',{scope:['email','profile']})
+})
+router.get('/auth/google/callback',(req,res)=>{
+    passport.authenticate('google',{
+        successRedirect:'/auth/protected',
+        failureRedirect:"/auth/google/failer"
+    })
+})
+router.get('/auth/protected',(req,res)=>{
+    res.send("hello there")
+})
+router.get('/auth/google/failer',(req,res)=>{
+    res.send("failed to login")
+})
+router.get("/allusers",(req, res) => {
+    User.find({})
+      .then((user) => {
+        res.json(user);
+      })
+      .catch((err) => {
+        err.status(400).json("Eror") + " " + err;
+      });
+  });
 router.post('/signup', async (req, res) => {
     try {
         let {password} = req.body
@@ -69,9 +96,11 @@ router.get('/confirmation/:token', async (req, res) => {
     if (! verifiedUser) {
         return res.status(400).json({type: "error", msg: err.message});
     }
-    res.status(200).json({msg: ` Thank you ${
+    res.status(200).json({
+            msg: ` Thank you ${
             user.firstName
-        } The account has been verified. Please log in to continue.`})
+        } The account has been verified. Please log in to continue.`
+    })
 
 })
 router.post('/resetpassword', async (req, res) => {
@@ -98,7 +127,7 @@ router.post('/resetpassword', async (req, res) => {
                 updateduser.firstName
             } Thanks for requesting reset password <br></br> please follow  this <a href='http://localhost:3002/user/resetpassword/${
                 updateduser.resetPassword
-} '><strong>link</strong>   </a>  you have 10 minutes to changed password`
+            } '><strong>link</strong>   </a>  you have 10 minutes to changed password`
 
         };
         transporter.sendMail(mailOptions, function (err) {
@@ -120,13 +149,15 @@ router.post('/resetpassword/:resetToken', async (req, res) => {
         if (! user) {
             res.status(404).json({msg: "user not found or activation link is expired"})
         }
-      
+
         let newPasword = await bcrypt.hash(req.body.password, 10)
         user.password = newPasword
         let updateduser = await user.save()
-        res.status(200).json({msg: `${
+        res.status(200).json({
+                msg: `${
                 updateduser.firstName
-            } password is successfully Changed please login In!!`})
+            } password is successfully Changed please login In!!`
+        })
     } catch (error) {
         res.status(500).json({msg: error})
     }
@@ -151,4 +182,46 @@ router.delete('/deleteuser', async (req, res) => {
         return res.status(500).json({error: error.message});
     }
 })
+router.post('/login', async (req, res) => {
+    try {
+        
+        const user = await User.findOne({email:req.body.email})
+        if (!user) {
+            res.status(404).json({msg: "We cound not find any account with this email"})
+        }
+
+        const isPassWordMatch = await  bcrypt.compare(req.body.password,user.password)
+          console.log(isPassWordMatch)
+        if (!isPassWordMatch) {
+            res.status(404).json({msg: `incorrect password`})
+        }
+        if (! user.isVerified) {
+            res.status(400).json({msg: "this account is not verified "})
+        }
+        res.json({msg:`wellcome ${user.firstName} you are now logIN`  });
+      req.session.save(()=>{
+        req.session.userId = user.id;
+        req.session.email = user.email;
+        req.session.logged_in = true;
+      
+        res.status(200).json({msg:`wellcome ${user.firstName} you are now logIN`  });
+     })
+    } catch (error) {
+        res.status(500).json({msg : error})
+    }
+
+
+})
+router.get("/logout", (req, res) => {
+ 
+    if (req.session.logged_in) {
+      req.session.destroy(() => {
+      
+        res.status(204).end()
+      });
+    } else {
+      res.status(404).end();
+    }
+  });
+
 module.exports = router
