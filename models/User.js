@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose')
-const mongoose =require('mongoose');
-const { reset } = require('nodemon');
+const mongoose = require('mongoose');
+const {reset} = require('nodemon');
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
         }
 
     },
-    password:{
-        type:String,
-        require:true
+    password: {
+        type: String,
+        require: true
     },
     firstName: {
         type: String,
@@ -32,11 +32,10 @@ const userSchema = new mongoose.Schema({
         require: true,
         trim: true
     },
-   address:{
-    type:Schema.Types.ObjectId,
-    ref:"adress"
-   }
-,
+    address: {
+        type: Schema.Types.ObjectId,
+        ref: "adress"
+    },
     orderHistory: [
         {
             type: Schema.Types.ObjectId,
@@ -49,16 +48,17 @@ const userSchema = new mongoose.Schema({
             ref: "cart"
         }
     ],
-    isVerified:{
-        type:Boolean,
-        default:false
+    isVerified: {
+        type: Boolean,
+        default: false
     },
-    resetPassword:{
-     expires: 600,
-      type:String,
+    resetPassword: {
+        type: String,
       
-      
+        expires: 43200
+
+
     }
-},{ timestamps: true })
+}, {timestamps: true})
 const User = model('user', userSchema);
 module.exports = User
