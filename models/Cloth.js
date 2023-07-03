@@ -1,5 +1,6 @@
-const {SChema, model} = require('mongoose')
-const ClothSchema = new SChema({
+const {Schema, model} = require('mongoose')
+const mongoose = require('mongoose');
+const clothSchema = new mongoose.Schema({
     pictureUrl: {
         type: String,
         trim: true
@@ -11,9 +12,11 @@ const ClothSchema = new SChema({
         type: Number
     },
     availability: {
-        type: Boolean
+        type: Boolean,
+        default:true
     }
 
 },{ timestamps: true })
-const Cloth=model('cloth',ClothSchema)
+
+const Cloth=model('cloth',clothSchema)
 module.exports=Cloth

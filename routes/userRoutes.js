@@ -10,6 +10,7 @@ const passport = require('passport');
 require('dotenv').config()
 router.get('/auth/google',(req,res)=>{
     passport.authenticate('google',{scope:['email','profile']})
+   
 })
 router.get('/auth/google/callback',(req,res)=>{
     passport.authenticate('google',{
